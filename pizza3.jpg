@@ -1,0 +1,58 @@
+package com.example.pizzarecipes.adapters;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.example.pizzarecipes.R;
+import com.example.pizzarecipes.models.PizzaItem;
+import java.util.List;
+
+public class CatalogAdapter extends BaseAdapter {
+    private final Context context;
+    private final List<PizzaItem> itemsList;
+
+    public CatalogAdapter(Context context, List<PizzaItem> itemsList) {
+        this.context = context;
+        this.itemsList = itemsList;
+    }
+
+    @Override public int getCount() { return itemsList.size(); }
+    @Override public Object getItem(int position) { return itemsList.get(position); }
+    @Override public long getItemId(int position) { return itemsList.get(position).getPizzaId(); }
+
+    // Implémentation du pattern ViewHolder pour optimiser les performances
+    private static class ViewHolder {
+        ImageView thumbnail;
+        TextView titleLabel;
+        TextView priceLabel;
+        TextView timeLabel;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_pizza_card, parent, false);
+            holder = new ViewHolder();
+            holder.thumbnail = convertView.findViewById(R.id.img_pizza_thumb);
+            holder.titleLabel = convertView.findViewById(R.id.txt_pizza_title);
+            holder.priceLabel = convertView.findViewById(R.id.txt_pizza_info_price);
+            holder.timeLabel = convertView.findViewById(R.id.txt_pizza_info_time);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+
+        PizzaItem currentItem = itemsList.get(position);
+        holder.thumbnail.setImageResource(currentItem.getCoverImage());
+        holder.titleLabel.setText(currentItem.getTitle());
+        holder.priceLabel.setText(String.valueOf((int) currentItem.getCost())); // Affiche le prix
+        holder.timeLabel.setText(currentItem.getPreparationTime()); // Affiche le temps
+
+        return convertView;
+    }
+}

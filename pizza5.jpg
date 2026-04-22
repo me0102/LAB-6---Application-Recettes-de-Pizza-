@@ -1,0 +1,11 @@
+package com.example.pizzarecipes.interfaces;
+
+import java.util.List;
+
+public interface DataAccess<T> {
+    T insert(T item);
+    T modify(T item);
+    boolean remove(long id);
+    T fetchById(long id);
+    List<T> fetchAll();
+}

@@ -1,0 +1,55 @@
+package com.example.pizzarecipes.views;
+
+import android.content.Intent; // Nécessaire pour le partage
+import android.os.Bundle;
+import android.widget.ImageButton; // Nécessaire pour le bouton
+import android.widget.ImageView;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+import com.example.pizzarecipes.R;
+import com.example.pizzarecipes.models.PizzaItem;
+import com.example.pizzarecipes.repositories.PizzaCatalog;
+
+public class DetailsActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_details);
+
+        long targetId = getIntent().getLongExtra("EXTRA_PIZZA_ID", -1);
+        PizzaItem pizza = PizzaCatalog.getInstance().fetchById(targetId);
+
+        ImageView banner = findViewById(R.id.detail_banner);
+        TextView header = findViewById(R.id.detail_header);
+        TextView ingList = findViewById(R.id.detail_ingredients);
+        TextView descText = findViewById(R.id.detail_description);
+        TextView stepsText = findViewById(R.id.detail_steps);
+
+        // 1. On récupère le bouton de partage par son ID
+        ImageButton btnShare = findViewById(R.id.btn_share);
+
+        if (pizza != null) {
+            banner.setImageResource(pizza.getCoverImage());
+            header.setText(pizza.getTitle());
+            ingList.setText(pizza.getIngredientsList());
+            descText.setText(pizza.getDetails());
+            stepsText.setText(pizza.getInstructions());
+
+            // 2. On configure l'action du bouton de partage
+            btnShare.setOnClickListener(v -> {
+                // On prépare le message à partager
+                String message = "Regarde cette recette de " + pizza.getTitle() + " !\n\n" +
+                        "Description : " + pizza.getDetails() + "\n\n" +
+                        "Ingrédients : \n" + pizza.getIngredientsList();
+
+                // Création de l'Intent de partage
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, message);
+
+                // Affiche le menu de partage (WhatsApp, Mail, etc.)
+                startActivity(Intent.createChooser(shareIntent, "Partager la recette via :"));
+            });
+        }
+    }
+}

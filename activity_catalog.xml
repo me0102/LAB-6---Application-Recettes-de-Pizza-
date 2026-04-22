@@ -1,0 +1,59 @@
+package com.example.pizzarecipes.views;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.ListView;
+import androidx.appcompat.app.AppCompatActivity;
+import com.example.pizzarecipes.R;
+import com.example.pizzarecipes.adapters.CatalogAdapter;
+import com.example.pizzarecipes.models.PizzaItem;
+import com.example.pizzarecipes.repositories.PizzaCatalog;
+import java.util.List;
+
+public class CatalogActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_catalog);
+
+        ListView listViewPizzas = findViewById(R.id.list_pizzas_view);
+        List<PizzaItem> catalogData = PizzaCatalog.getInstance().fetchAll();
+
+        CatalogAdapter adapter = new CatalogAdapter(this, catalogData);
+        listViewPizzas.setAdapter(adapter);
+
+        listViewPizzas.setOnItemClickListener((parent, view, position, id) -> {
+            Intent detailIntent = new Intent(CatalogActivity.this, DetailsActivity.class);
+            detailIntent.putExtra("EXTRA_PIZZA_ID", id);
+            startActivity(detailIntent);
+        });
+    }
+
+    // --- Ajout du Menu ---
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Cette ligne "gonfle" le menu et l'ajoute à la barre d'action
+        getMenuInflater().inflate(R.menu.menu_catalog, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // On gère les clics sur les éléments du menu
+        if (item.getItemId() == R.id.action_share_app) {
+            // Action de partage globale pour l'application
+            String shareMessage = "Découvrez cette super application de recettes de pizzas !";
+
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+
+            startActivity(Intent.createChooser(shareIntent, "Partager l'application via :"));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+}

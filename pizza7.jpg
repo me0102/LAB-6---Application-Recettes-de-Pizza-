@@ -1,0 +1,54 @@
+package com.example.pizzarecipes.models;
+
+public class PizzaItem {
+    private static long idCounter = 1;
+
+    private long pizzaId;
+    private String title;
+    private double cost;
+    private int coverImage;
+    private String preparationTime;
+    private String ingredientsList;
+    private String details;
+    private String instructions;
+
+    public PizzaItem() {
+        this.pizzaId = idCounter++;
+    }
+
+    public PizzaItem(String title, double cost, int coverImage, String preparationTime,
+                     String ingredientsList, String details, String instructions) {
+        this.pizzaId = idCounter++;
+        this.title = title;
+        this.cost = cost;
+        this.coverImage = coverImage;
+        this.preparationTime = preparationTime;
+        this.ingredientsList = ingredientsList;
+        this.details = details;
+        this.instructions = instructions;
+    }
+
+    // Getters
+    public long getPizzaId() { return pizzaId; }
+    public String getTitle() { return title; }
+    public double getCost() { return cost; }
+    public int getCoverImage() { return coverImage; }
+    public String getPreparationTime() { return preparationTime; }
+    public String getIngredientsList() { return ingredientsList; }
+    public String getDetails() { return details; }
+    public String getInstructions() { return instructions; }
+
+    // Setters
+    public void setTitle(String title) { this.title = title; }
+    public void setCost(double cost) { this.cost = cost; }
+    public void setCoverImage(int coverImage) { this.coverImage = coverImage; }
+    public void setPreparationTime(String preparationTime) { this.preparationTime = preparationTime; }
+    public void setIngredientsList(String ingredientsList) { this.ingredientsList = ingredientsList; }
+    public void setDetails(String details) { this.details = details; }
+    public void setInstructions(String instructions) { this.instructions = instructions; }
+
+    @Override
+    public String toString() {
+        return title + " (" + cost + " €)";
+    }
+}

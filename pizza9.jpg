@@ -1,0 +1,119 @@
+package com.example.pizzarecipes.repositories;
+
+import com.example.pizzarecipes.R;
+import com.example.pizzarecipes.models.PizzaItem;
+import com.example.pizzarecipes.interfaces.DataAccess;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class PizzaCatalog implements DataAccess<PizzaItem> {
+
+    private static PizzaCatalog instance;
+    private final List<PizzaItem> database = new ArrayList<>();
+
+    private PizzaCatalog() {
+        initializeData();
+    }
+
+    public static synchronized PizzaCatalog getInstance() {
+        if (instance == null) {
+            instance = new PizzaCatalog();
+        }
+        return instance;
+    }
+
+    private void initializeData() {
+        insert(new PizzaItem("BARBECUED CHICKEN PIZZA", 3.0, R.drawable.pizza1, "35 min",
+                "- 2 boneless skinless chicken breast halves...\n- 1 cup barbecue sauce",
+                "So fast and so easy with refrigerated pizza crust...",
+                "STEP 1: Sprinkle chicken with pepper...\nSTEP 2: Divide dough in half..."));
+
+        insert(new PizzaItem("BRUSCHETTA PIZZA", 5.0, R.drawable.pizza2, "35 min",
+                "- 1/2 pound reduced-fat bulk pork sausage...\n- 1 prebaked 12-inch pizza crust",
+                "You might need a knife and fork for this hearty pizza!...",
+                "STEP 1: In a small skillet, cook sausage...\nSTEP 2: Combine tomatoes, basil..."));
+
+        insert(new PizzaItem("SPINACH PIZZA", 2.0, R.drawable.pizza3, "25 min",
+                "- 1 package pizza crust mix...\n- 1/2 cup Alfredo sauce\n- 4 cups spinach",
+                "This tasty pizza is so easy to prepare...",
+                "STEP 1: Prepare pizza dough...\nSTEP 2: Spread Alfredo sauce..."));
+
+        insert(new PizzaItem("DEEP-DISH SAUSAGE PIZZA", 8.0, R.drawable.pizza4, "45 min",
+                "- 1 package active dry yeast...\n- 2/3 cup warm water...",
+                "My Grandma made the tastiest snacks...",
+                "STEP 1: Dissolve yeast in water...\nSTEP 2: Saute onion..."));
+
+        insert(new PizzaItem("HOMEMADE PIZZA", 4.0, R.drawable.pizza5, "50 min",
+                "- 1 package active dry yeast...\n- 1-1/4 cups warm water...",
+                "This recipe is a hearty, zesty main dish...",
+                "STEP 1: Dissolve yeast...\nSTEP 2: Turn onto floured surface..."));
+
+        insert(new PizzaItem("PESTO CHICKEN PIZZA", 3.0, R.drawable.pizza6, "50 min",
+                "- 2 teaspoons active dry yeast...\n- 2-3/4 cups bread flour...",
+                "This is the only pizza I make now...",
+                "STEP 1: Dissolve yeast...\nSTEP 2: Knead until smooth..."));
+
+        insert(new PizzaItem("LOADED MEXICAN PIZZA", 3.0, R.drawable.pizza7, "30 min",
+                "- 1 can black beans...\n- 1 medium red onion...",
+                "My husband is a picky eater, but this healthy pizza...",
+                "STEP 1: Mash black beans...\nSTEP 2: Place crust..."));
+
+        insert(new PizzaItem("BACON CHEESEBURGER PIZZA", 2.0, R.drawable.pizza8, "20 min",
+                "- 1/2 pound ground beef...\n- 6 bacon strips...",
+                "Kids of all ages love pizza and cheeseburgers...",
+                "STEP 1: Cook beef and onion...\nSTEP 2: Place crust on pan..."));
+
+        insert(new PizzaItem("PIZZA MARGHERITA", 1.0, R.drawable.pizza9, "30 min",
+                "- 3 teaspoons active dry yeast...\n- 3 cups bread flour...",
+                "A classic Pizza Margherita, named for Queen Margherita...",
+                "STEP 1: Dissolve yeast...\nSTEP 2: Knead until smooth..."));
+
+        insert(new PizzaItem("PEPPERONI-SAUSAGE STUFFED", 5.0, R.drawable.pizza10, "45 min",
+                "- 1 package active dry yeast...\n- 2 tablespoons olive oil...",
+                "For 30 years, friends have been telling me to open a pizzeria...",
+                "STEP 1: Dissolve yeast...\nSTEP 2: Turn dough..."));
+    }
+
+    @Override
+    public PizzaItem insert(PizzaItem item) {
+        database.add(item);
+        return item;
+    }
+
+    @Override
+    public PizzaItem modify(PizzaItem item) {
+        for (int i = 0; i < database.size(); i++) {
+            if (database.get(i).getPizzaId() == item.getPizzaId()) {
+                database.set(i, item);
+                return item;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean remove(long id) {
+        for (int i = 0; i < database.size(); i++) {
+            if (database.get(i).getPizzaId() == id) {
+                database.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public PizzaItem fetchById(long id) {
+        for (PizzaItem p : database) {
+            if (p.getPizzaId() == id) return p;
+        }
+        return null;
+    }
+
+    @Override
+    public List<PizzaItem> fetchAll() {
+        return Collections.unmodifiableList(database);
+    }
+}
